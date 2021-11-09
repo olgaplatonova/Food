@@ -100,27 +100,35 @@ tabsParent.addEventListener('click', function(event) {
     setClock('.timer', deadline);
 
 
-    //Modal
+//Modal
 
-// const modalTrigger = document.querySelectorAll('[data-modal]'),
-//     modal = document.querySelector('.modal'),
-//     modalCloseBtn = document.querySelector('[data-close]');
+const modalTrigger = document.querySelectorAll('[data-modal]'),
+    modal = document.querySelector('.modal'),
+    modalCloseBtn = document.querySelector('[data-close]');
 
-//     modalTrigger.forEach(btn => {
-//         btn.addEventListener('click', () => {
-//             modal.classList.toggle('show');
-//             document.body.style.overflow = 'hidden';
-//         });
-//     });
+    modalTrigger.forEach(btn => {
+        btn.addEventListener('click', () => {
+            modal.classList.toggle('show');
+            document.body.style.overflow = 'hidden';
+        });
+    });
 
-//     modalCloseBtn.addEventListener('click', () => {
-//         modal.classList.toggle('show');
-//         document.body.style.overflow = '';
-//     });
+    function closeModal () {
+        modal.classList.toggle('show');
+        document.body.style.overflow = '';
+    }
 
-//     modal.addEventListener('click', (event) => {
-//         if (event.target === modal) {
-//             modal.classList.toggle('show');
-//             document.body.style.overflow = '';
-//         }
-//     });
+    modalCloseBtn.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            closeModal();
+        }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.code === "Escape" && modal.classList.contains('show')) {
+            closeModal();
+        }
+    });
+
+    });
