@@ -1,46 +1,46 @@
 window.addEventListener('DOMContentLoaded', () => {
 
-    const tabs = document.querySelectorAll('.tabheader__item'),
-          tabsContent = document.querySelectorAll('.tabcontent'),
-          tabsParent = document.querySelector('.tabheader__items');
+    // Tabs
+    
+	let tabs = document.querySelectorAll('.tabheader__item'),
+    tabsContent = document.querySelectorAll('.tabcontent'),
+    tabsParent = document.querySelector('.tabheader__items');
 
-    //Функция для скрытия табов
-    function hideTabContent () {
-        tabsContent.forEach(item => {
+function hideTabContent() {
+    
+    tabsContent.forEach(item => {
         item.classList.add('hide');
         item.classList.remove('show', 'fade');
-        });
-
-        tabs.forEach (item => {
-            item.classList.remove('tabheader__item_active');
-        });
-    }
-
-    //Функция, которая показывает табы
-    function showTabContent (i = 0) {
-        tabsContent[i].classList.add('show', 'fade');
-        tabsContent[i].classList.remove('hide');
-        tabs[i].classList.add('tabheader__item_active');
-    }
-
-    hideTabContent();
-    showTabContent();
-
-    tabsParent.addEventListener('click', (event) => {
-        const target = event.target;
-
-        if (target && target.classList.contains('tabheader__item')) {
-            tabs.forEach((item, i) => {
-                if (target == item) {
-                    hideTabContent();
-                    showTabContent(i);
-                }
-            });
-        }
     });
 
-    //Timer
+    tabs.forEach(item => {
+        item.classList.remove('tabheader__item_active');
+    });
+}
 
+function showTabContent(i = 0) {
+    tabsContent[i].classList.add('show', 'fade');
+    tabsContent[i].classList.remove('hide');
+    tabs[i].classList.add('tabheader__item_active');
+}
+
+hideTabContent();
+showTabContent();
+
+tabsParent.addEventListener('click', function(event) {
+    const target = event.target;
+    if(target && target.classList.contains('tabheader__item')) {
+        tabs.forEach((item, i) => {
+            if (target == item) {
+                hideTabContent();
+                showTabContent(i);
+            }
+        });
+    }
+});
+});
+
+    //Timer
     const deadline = '2021-12-26';
 
     //Задача получить разницу между датами
@@ -64,8 +64,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     }
 
-    
-
     function getZero (num) {
         if (num >= 0 && num < 10) {
             return '0' + num;
@@ -76,28 +74,53 @@ window.addEventListener('DOMContentLoaded', () => {
 
     function setClock (selector, endTime) {
 
-        const timer = document.querySelector(selector),
-          days = document.querySelector('#days'),
-          hours = document.querySelector('#hours'),
-          minutes = document.querySelector('#minutes'),
-          seconds = document.querySelector('#seconds'),
-          timeInterval = setInterval(updateClock, 1000);
+    const timer = document.querySelector(selector),
+        days = document.querySelector('#days'),
+        hours = document.querySelector('#hours'),
+        minutes = document.querySelector('#minutes'),
+        seconds = document.querySelector('#seconds'),
+        timeInterval = setInterval(updateClock, 1000);
 
-          updateClock();
+        updateClock();
 
-          function updateClock () {
-              const t = getTimeRemaning(endTime);
+        function updateClock () {
+            const t = getTimeRemaning(endTime);
 
-              days.innerHTML = getZero(t.days);
-              hours.innerHTML = getZero(t.hours);
-              minutes.innerHTML = getZero(t.minutes);
-              seconds.innerHTML = getZero(t.seconds);
+            days.innerHTML = getZero(t.days);
+            hours.innerHTML = getZero(t.hours);
+            minutes.innerHTML = getZero(t.minutes);
+            seconds.innerHTML = getZero(t.seconds);
 
-              if (t.total <= 0) {
-                  clearInterval(timeInterval);
-              }
-          }
+            if (t.total <= 0) {
+                clearInterval(timeInterval);
+            }
+        }
     }
 
     setClock('.timer', deadline);
-});
+
+
+    //Modal
+
+// const modalTrigger = document.querySelectorAll('[data-modal]'),
+//     modal = document.querySelector('.modal'),
+//     modalCloseBtn = document.querySelector('[data-close]');
+
+//     modalTrigger.forEach(btn => {
+//         btn.addEventListener('click', () => {
+//             modal.classList.toggle('show');
+//             document.body.style.overflow = 'hidden';
+//         });
+//     });
+
+//     modalCloseBtn.addEventListener('click', () => {
+//         modal.classList.toggle('show');
+//         document.body.style.overflow = '';
+//     });
+
+//     modal.addEventListener('click', (event) => {
+//         if (event.target === modal) {
+//             modal.classList.toggle('show');
+//             document.body.style.overflow = '';
+//         }
+//     });
