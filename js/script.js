@@ -106,15 +106,24 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
     modal = document.querySelector('.modal'),
     modalCloseBtn = document.querySelector('[data-close]');
 
-    modalTrigger.forEach(btn => {
-        btn.addEventListener('click', () => {
-            modal.classList.toggle('show');
-            document.body.style.overflow = 'hidden';
-        });
-    });
+    const modalTimerId = setTimeout (openModal, 3000);
 
+    //Создаем функцию открытия окна, чтобы переиспользовать 
+    function openModal () {
+        modal.classList.add('show');
+        modal.classList.remove('hide');
+        document.body.style.overflow = 'hidden';
+        clearInterval(modalTimerId);
+    }
+
+    modalTrigger.forEach(btn => {
+        btn.addEventListener('click', openModal);
+    });
+    
+    //Создаем функцию закрытия окна, чтобы переиспользовать 
     function closeModal () {
-        modal.classList.toggle('show');
+        modal.classList.add('hide');
+        modal.classList.remove('show');
         document.body.style.overflow = '';
     }
 
@@ -131,4 +140,12 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
         }
     });
 
-    });
+    function showModalByScroll () {
+        if (pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+            openModal();
+            window.removeEventListener('scroll', showModalByScroll);
+        }
+    }
+
+    window.addEventListener('scroll', showModalByScroll);
+});
