@@ -106,7 +106,7 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
     modal = document.querySelector('.modal'),
     modalCloseBtn = document.querySelector('[data-close]');
 
-    const modalTimerId = setTimeout (openModal, 3000);
+    // const modalTimerId = setTimeout (openModal, 3000);
 
     //Создаем функцию открытия окна, чтобы переиспользовать 
     function openModal () {
