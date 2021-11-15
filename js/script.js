@@ -81,7 +81,7 @@ tabsParent.addEventListener('click', function(event) {
                 hideTabContent();
                 showTabContent(i);
             }
-        });
+        }); 
     }
 });
 
