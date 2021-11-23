@@ -12,7 +12,7 @@ class MenuCard {
         this.transfer = 27;
         this.changeToUah();
 
-        console.log('construct', parentSelector, this.parent);
+        // console.log('construct', parentSelector, this.parent);
     }
 
 
@@ -104,7 +104,6 @@ tabsParent.addEventListener('click', function(event) {
             'minutes': minutes,
             'seconds': seconds
         };
-
     }
 
     function getZero (num) {
@@ -142,14 +141,12 @@ tabsParent.addEventListener('click', function(event) {
 
     setClock('.timer', deadline);
 
-
 //Modal
 
 const modalTrigger = document.querySelectorAll('[data-modal]'),
-    modal = document.querySelector('.modal'),
-    modalCloseBtn = document.querySelector('[data-close]');
+    modal = document.querySelector('.modal');
 
-    // const modalTimerId = setTimeout (openModal, 3000);
+    const modalTimerId = setTimeout (openModal, 50000);
 
     //Создаем функцию открытия окна, чтобы переиспользовать 
     function openModal () {
@@ -170,10 +167,8 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
         document.body.style.overflow = '';
     }
 
-    modalCloseBtn.addEventListener('click', closeModal);
-
-    modal.addEventListener('click', (event) => {
-        if (event.target === modal) {
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal || e.target.getAttribute('data-close') == '') {
             closeModal();
         }
 
@@ -223,4 +218,78 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
         ".menu .container"
     ).render();
 
+    //Form
+
+    const forms = document.querySelectorAll('form');
+
+    const message = {
+        loading: 'img/form/spinner.svg',
+        success: 'Все прошло успешно! Аллилуйя!',
+        failure: 'Упс! Что-то явно пошло не так...'
+    };
+
+    forms.forEach(item => {
+        postData(item);
+    });
+
+    function postData (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault(); //отменяем стандартное поведение
+
+            let statusMessage = document.createElement('img');
+            statusMessage.src = message.loading;
+            statusMessage.style.cssText = `
+                display: block;
+                margin: 0 auto;
+            `;
+            form.insertAdjacentElement('afterend', statusMessage);
+            const formData = new FormData(form);
+
+            const object = {};
+            formData.forEach(function(value,key){
+                object[key] = value;
+            });
+
+            fetch('server1.php', {
+                method: "POST",
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(object)
+            }).then(data => data.text())
+            .then(data => {
+                console.log(data);
+                showThanksModal(message.success);
+                statusMessage.remove();
+            }).catch(() => {
+                showThanksModal(message.failure);
+            }).finally(() => {
+                form.reset();
+            });
+        });
+    }
+
+    function showThanksModal (message) {
+        const prevModalDialog = document.querySelector('.modal__dialog');
+
+        prevModalDialog.classList.add('hide'); //скрыли что было изначально
+        openModal(); 
+
+        const thanksModal = document.createElement('div');
+        thanksModal.classList.add('modal__dialog');
+        thanksModal.innerHTML = `
+            <div class="modal__content">
+                <div class="modal__close" data-close>×</div>
+                <div class="modal__title">${message}</div>
+            </div>
+        `;
+
+        document.querySelector('.modal').append(thanksModal);
+        setTimeout(() => {
+                thanksModal.remove();
+                prevModalDialog.classList.add('show');
+                prevModalDialog.classList.remove('hide');
+                closeModal();
+        }, 4000);
+    }
 });
