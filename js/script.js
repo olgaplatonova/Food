@@ -285,10 +285,6 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
         }, 4000);
     }
 
-    fetch('http://localhost:3000/menu')
-        .then(data => data.json())
-        .then(res => console.log(res));
-
     //Slider
 
     let slideIndex = 1;
@@ -337,60 +333,5 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
         plusSlides(1);
     });
 
-    //Form
-
-    const forms = document.querySelectorAll('form');
-
-    const message = {
-        loading: 'Загрузка',
-        success: 'Все прошло успешно! Аллилуйя!',
-        failure: 'Упс! Что-то явно пошло не так...'
-    };
-
-    forms.forEach(item => {
-        postData(item);
-    });
-
-    function postData (form) {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault(); //отменяем стандартное поведение
-
-            let statusMessage = document.createElement('div');
-            statusMessage.classList.add('status');
-            statusMessage.textContent = message.loading;
-            form.append(statusMessage);
-
-            const request = new XMLHttpRequest();
-            request.open('POST', 'server.php');
-
-            request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-            const formData = new FormData(form);
-
-            const object = {};
-            formData.forEach(function(value,key){
-                object[key] = value;
-            });
-
-            const json = JSON.stringify(object);
-
-            request.send(json);
-
-            request.addEventListener('load', () => {
-                if (request.status === 200) {
-                    console.log(request.response);
-                    statusMessage.textContent = message.success;
-                    form.reset();
-                    setTimeout(() => {
-                        statusMessage.remove();
-                    },  2000);
-                } else {
-                    statusMessage.textContent = message.failure;
-                }
-            });
-
-            
-
         });
-    }
 
-});
