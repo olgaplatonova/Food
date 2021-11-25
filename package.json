@@ -1,0 +1,22 @@
+{
+  "name": "project-food",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/olgaplatonova/Food-second.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/olgaplatonova/Food-second/issues"
+  },
+  "homepage": "https://github.com/olgaplatonova/Food-second#readme",
+  "devDependencies": {
+    "json-server": "^0.17.0"
+  }
+}
