@@ -90,7 +90,7 @@ tabsParent.addEventListener('click', function(event) {
 
     //Задача получить разницу между датами
 
-    function getTimeRemaning (endTime) {
+    function getTimeRemaning(endTime) {
         const t = Date.parse(endTime) - Date.parse(new Date()),
             days = Math.floor((t / (1000 * 60 * 60 * 24))),
             hours = Math.floor((t / (1000 * 60 * 60 ) % 24)),
@@ -288,6 +288,7 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
     //Slider
 
     const slides = document.querySelectorAll('.offer__slide'),
+            slider = document.querySelector('.offer__slider'),
             prev = document.querySelector('.offer__slider-prev'),
             next = document.querySelector('.offer__slider-next'),
             total = document.querySelector('#total'),
@@ -317,11 +318,65 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
         slide.style.width = width;
     });
 
+    slider.style.position = 'relative';
+
+    const indicators = document.createElement('ol'),
+                dots = [];
+
+    indicators.classList.add('carousel-indicators');
+    indicators.style.cssText = `
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 15;
+        display: flex;
+        justify-content: center;
+        margin-right: 15%;
+        margin-left: 15%;
+        list-style: none;
+        `;
+
+    slider.append(indicators);
+
+    for (let i = 0; i < slides.length; i++) {
+        const dot = document.createElement('li');
+        dot.setAttribute('data-slide-to', i + 1);
+        dot.style.cssText = `
+            box-sizing: content-box;
+            flex: 0 1 auto;
+            width: 30px;
+            height: 6px;
+            margin-right: 3px;
+            margin-left: 3px;
+            cursor: pointer;
+            background-color: #fff;
+            background-clip: padding-box;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            opacity: .5;
+            transition: opacity .6s ease;
+        `;
+        if ( i == 0) {
+            dot.style.opacity = 1;
+        }
+        indicators.append(dot);
+        dots.push(dot);
+    }
+
+    function deleteNotDigits(str) {
+        return +str.replace(/\D/g, '');
+    }
+
+    function getSlidesNumber(slides, slideIndex) {
+        return slides.length < 10 ? `0${slideIndex}` : slideIndex;
+    }
+
     next.addEventListener('click', () => {
-        if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) {
+        if (offset == deleteNotDigits(width) * (slides.length - 1)) {
             offset = 0;
         } else {
-            offset += +width.slice(0, width.length - 2);
+            offset += deleteNotDigits(width);
         }
 
         slidesField.style.transform = `translateX(-${offset}px)`;
@@ -332,18 +387,17 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
             slideIndex++;
         }
 
-        if (slides.length < 10) {
-            current.textContent = `0${slideIndex}`;
-        } else {
-            current.textContent = slideIndex;
-        }
+        current.textContent = getSlidesNumber(slides, slideIndex);
+
+        dots.forEach(dot => dot.style.opacity = '.5');
+        dots[slideIndex-1].style.opacity = 1; 
     });
 
     prev.addEventListener('click', () => {
         if (offset == 0) {
-            offset = +width.slice(0, width.length - 2) * (slides.length - 1);
+            offset = deleteNotDigits(width) * (slides.length - 1);
         } else {
-            offset -= +width.slice(0, width.length - 2);
+            offset -= deleteNotDigits(width);
         }
 
         slidesField.style.transform = `translateX(-${offset}px)`;
@@ -354,49 +408,29 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
             slideIndex--;
         }
 
-        if (slides.length < 10) {
-            current.textContent = `0${slideIndex}`;
-        } else {
-            current.textContent = slideIndex;
-        }
+        current.textContent = getSlidesNumber(slides, slideIndex);
+
+        dots.forEach(dot => dot.style.opacity = '.5');
+        dots[slideIndex-1].style.opacity = 1;
     });
 
 
-    
+    dots.forEach (dot => {
+        dot.addEventListener('click', (e) => {
+            const slideTo = e.target.getAttribute('data-slide-to');
 
-    // showSlides(slideIndex);
+            slideIndex = slideTo;
 
+            offset = deleteNotDigits(width) * (slideTo - 1);
 
-    // function showSlides (n) {
-    //     if (n > slides.length) {
-    //         slideIndex = 1;
-    //     }
-    //     if (n < 1) {
-    //         slideIndex = slides.length;
-    //     }
+            slidesField.style.transform = `translateX(-${offset}px)`;
 
-    //     slides.forEach((item) => item.style.display = 'none');
+            current.textContent = getSlidesNumber(slides, slideIndex);
 
-    //     slides[slideIndex - 1].style.display = 'block';
-
-    //     if (slides.length < 10) {
-    //         current.textContent = `0${slideIndex}`;
-    //     } else {
-    //         current.textContent = slideIndex;
-    //     }
-    // }
-    
-    // function plusSlides (n) {
-    //     showSlides(slideIndex += n);
-    // }
-
-    // prev.addEventListener('click', () => {
-    //     plusSlides(-1);
-    // });
-
-    // next.addEventListener('click', () => {
-    //     plusSlides(1);
-    // });
-
+            dots.forEach(dot => dot.style.opacity = '.5');
+            dots[slideIndex-1].style.opacity = 1;
         });
+    });
+
+});
 
